@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "launch frontend",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "start frontend",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}/apps/frontend",
+      "userDataDir": false
+    }
+  ]
+}
