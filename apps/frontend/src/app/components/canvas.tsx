@@ -2,7 +2,9 @@ import styles from './canvas.module.scss';
 
 import Shape from './shape';
 
-const shapes = [
+import { ShapeModel } from '../models/shape.model';
+
+const shapes: ShapeModel[] = [
   { x: 50, y: 50 },
   { x: 250, y: 350 },
 ];
@@ -10,8 +12,8 @@ const shapes = [
 export function Canvas() {
   return (
     <svg className={styles.canvas}>
-      {shapes.map((shape) => (
-        <Shape x={shape.x} y={shape.y} />
+      {shapes.map((shape, index) => (
+        <Shape key={index} data={shape} />
       ))}
     </svg>
   );
