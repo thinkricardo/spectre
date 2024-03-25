@@ -1,7 +1,9 @@
 const generalScopes = ['config', 'deps', 'repo', 'workspace'];
-const projectScopes = ['frontend'];
 
-const allowedScopes = [...generalScopes, ...projectScopes];
+const projectScopes = ['frontend'];
+const moduleScopes = ['canvas', 'shape'];
+
+const allowedScopes = [...generalScopes, ...projectScopes, ...moduleScopes];
 
 module.exports = {
   extends: ['@commitlint/config-conventional'],
