@@ -1,7 +1,7 @@
 const generalScopes = ['config', 'deps', 'repo', 'workspace'];
 
 const projectScopes = ['frontend'];
-const moduleScopes = ['canvas'];
+const moduleScopes = ['canvas', 'shape'];
 
 const allowedScopes = [...generalScopes, ...projectScopes, ...moduleScopes];
 
