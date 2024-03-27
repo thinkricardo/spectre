@@ -1,4 +1,4 @@
-export interface ShapeModel {
+export default interface ShapeModel {
   x: number;
   y: number;
 }

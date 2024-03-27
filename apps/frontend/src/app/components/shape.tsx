@@ -1,13 +1,18 @@
-import { ShapeModel } from '../models/shape.model';
+import ShapeModel from '../models/shape.model';
 
 type Props = {
   data: ShapeModel;
 };
 
-export function Shape(props: Props) {
-  const { x, y } = props.data;
+type Events = {
+  onClick: (evt: React.PointerEvent) => void;
+};
 
-  return <rect x={x} y={y} height="100" width="100" fill="#646cff" />;
+export function Shape(props: Props & Events) {
+  const { x, y } = props.data;
+  const { onClick } = props;
+
+  return <rect x={x} y={y} height="100" width="100" fill="#646cff" onPointerDown={onClick} />;
 }
 
 export default Shape;
