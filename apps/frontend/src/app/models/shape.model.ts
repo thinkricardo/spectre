@@ -1,4 +1,5 @@
-export interface ShapeModel {
-  x: number;
-  y: number;
+import PositionModel from './position.model';
+
+export default interface ShapeModel extends PositionModel {
+  id: string;
 }

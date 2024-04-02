@@ -1,19 +1,44 @@
-import styles from './canvas.module.scss';
+import { useCallback, useEffect, useState } from 'react';
+
+import PositionModel from '../models/position.model';
+import ShapeModel from '../models/shape.model';
+import { canvasService } from '../services/canvas.service';
 
 import Shape from './shape';
 
-import { ShapeModel } from '../models/shape.model';
-
-const shapes: ShapeModel[] = [
-  { x: 50, y: 50 },
-  { x: 250, y: 350 },
-];
+import styles from './canvas.module.scss';
 
 export function Canvas() {
+  const [shapes, setShapes] = useState<ShapeModel[]>([]);
+
+  useEffect(() => {
+    const subscription = canvasService.getShapes().subscribe((shapes) => {
+      if (shapes) {
+        setShapes(shapes);
+      }
+    });
+
+    return () => {
+      if (subscription) subscription.unsubscribe();
+    };
+  });
+
+  const handleShapeClick = useCallback((shapeId: string, evt: React.PointerEvent) => {
+    const { clientX: mouseX, clientY: mouseY } = evt;
+    const { x: shapeX, y: shapeY } = (evt.target as SVGElement).getBoundingClientRect();
+
+    const startPosition: PositionModel = {
+      x: Math.trunc(mouseX - shapeX),
+      y: Math.trunc(mouseY - shapeY),
+    };
+
+    canvasService.handle(shapeId, startPosition);
+  }, []);
+
   return (
     <svg className={styles.canvas}>
-      {shapes.map((shape, index) => (
-        <Shape key={index} data={shape} />
+      {shapes.map((shape) => (
+        <Shape key={shape.id} id={shape.id} onClick={(evt) => handleShapeClick(shape.id, evt)} />
       ))}
     </svg>
   );
