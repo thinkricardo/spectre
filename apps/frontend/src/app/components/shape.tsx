@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import ShapeModel from '../models/shape.model';
-import { canvasService } from '../services/canvas.service';
+import canvasService from '../services/canvas.service';
 
 type Props = {
   id: string;

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import Direction from '../enums/direction.enum';
 import PositionModel from '../models/position.model';
-import { canvasService } from '../services/canvas.service';
+import canvasService from '../services/canvas.service';
 
 import styles from './resize-handler.module.scss';
 

@@ -52,4 +52,6 @@ class CanvasService {
   }
 }
 
-export const canvasService = new CanvasService();
+const canvasService = new CanvasService();
+
+export default canvasService;

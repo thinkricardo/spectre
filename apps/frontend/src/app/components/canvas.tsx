@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { getDirections } from '../enums/direction.enum';
 import PositionModel from '../models/position.model';
 import ShapeModel from '../models/shape.model';
-import { canvasService } from '../services/canvas.service';
+import canvasService from '../services/canvas.service';
 
-import ResizeHandler from './resize-handler';
+import Controls from './controls';
 import Shape from './shape';
 
 import styles from './canvas.module.scss';
 
 export function Canvas() {
   const [shapes, setShapes] = useState<ShapeModel[]>([]);
-  const [isShapeSelected, setIsShapeSelected] = useState(false);
 
   useEffect(() => {
     const subscription = canvasService.getShapes().subscribe((shapes) => {
@@ -27,8 +25,6 @@ export function Canvas() {
   });
 
   const handleShapeClick = useCallback((shapeId: string, evt: React.PointerEvent) => {
-    setIsShapeSelected(true);
-
     const { clientX: mouseX, clientY: mouseY } = evt;
     const {
       x: shapeX,
@@ -61,15 +57,7 @@ export function Canvas() {
         ))}
       </svg>
 
-      {isShapeSelected && (
-        <svg className={styles.controls}>
-          <g>
-            {getDirections().map((direction) => (
-              <ResizeHandler key={direction} direction={direction}></ResizeHandler>
-            ))}
-          </g>
-        </svg>
-      )}
+      <Controls />
     </>
   );
 }
