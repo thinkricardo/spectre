@@ -1,5 +1,5 @@
-import PositionModel from './position.model';
+import RectModel from './rect.model';
 
-export default interface ShapeModel extends PositionModel {
+export default interface ShapeModel extends RectModel {
   id: string;
 }
