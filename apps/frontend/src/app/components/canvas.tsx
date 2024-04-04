@@ -26,6 +26,7 @@ export function Canvas() {
 
   const handleShapeClick = useCallback((shapeId: string, evt: React.PointerEvent) => {
     const { clientX: mouseX, clientY: mouseY } = evt;
+
     const {
       x: shapeX,
       y: shapeY,
@@ -46,7 +47,7 @@ export function Canvas() {
       width: shapeWidth,
     });
 
-    canvasService.handleDrag(shapeId, startPosition);
+    canvasService.handleShapeDrag(startPosition);
   }, []);
 
   return (

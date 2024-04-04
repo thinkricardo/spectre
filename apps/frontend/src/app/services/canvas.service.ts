@@ -1,7 +1,9 @@
-import { BehaviorSubject, filter, fromEvent, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, filter, fromEvent, takeUntil } from 'rxjs';
 
+import Direction from '../enums/direction.enum';
 import PositionModel from '../models/position.model';
 import ShapeModel from '../models/shape.model';
+import { calculateResize } from '../utils/calculations';
 
 const initialShapes = [
   { id: 'abc', x: 50, y: 50, height: 100, width: 100 },
@@ -10,19 +12,15 @@ const initialShapes = [
 ];
 
 class CanvasService {
-  private shapes: Subject<ShapeModel[]> = new BehaviorSubject(initialShapes);
+  private shapes: BehaviorSubject<ShapeModel[]> = new BehaviorSubject(initialShapes);
 
-  selectedShape: Subject<ShapeModel | undefined> = new BehaviorSubject<ShapeModel | undefined>(
-    undefined,
-  );
+  selectedShape: BehaviorSubject<ShapeModel | undefined> = new BehaviorSubject<
+    ShapeModel | undefined
+  >(undefined);
 
-  updateShape: Subject<ShapeModel | undefined> = new BehaviorSubject<ShapeModel | undefined>(
-    undefined,
-  );
-
-  selectShape(shape: ShapeModel) {
-    this.selectedShape.next(shape);
-  }
+  updateShape: BehaviorSubject<ShapeModel | undefined> = new BehaviorSubject<
+    ShapeModel | undefined
+  >(undefined);
 
   getShapes() {
     initialShapes.map((s) => this.updateShape.next(s));
@@ -34,7 +32,11 @@ class CanvasService {
     return this.updateShape.pipe(filter((s) => s?.id === shapeId));
   }
 
-  handleDrag(shapeId: string, start: PositionModel) {
+  selectShape(shape: ShapeModel) {
+    this.selectedShape.next(shape);
+  }
+
+  handleShapeDrag(start: PositionModel) {
     const mouseUpEvent = fromEvent(document, 'mouseup');
 
     fromEvent(document, 'mousemove')
@@ -47,7 +49,32 @@ class CanvasService {
           y: mouseEvent.clientY - start.y,
         };
 
-        this.updateShape.next({ id: shapeId, ...newPosition, height: 100, width: 100 });
+        const shape = this.selectedShape.getValue();
+
+        if (shape) {
+          this.updateShape.next({ ...shape, ...newPosition });
+        }
+      });
+  }
+
+  handleShapeResize(direction: Direction) {
+    const mouseUpEvent = fromEvent(document, 'mouseup');
+
+    fromEvent(document, 'mousemove')
+      .pipe(takeUntil(mouseUpEvent))
+      .subscribe((evt) => {
+        const mouseEvent = evt as MouseEvent;
+        const mousePosition: PositionModel = { x: mouseEvent.clientX, y: mouseEvent.clientY };
+
+        const shape = this.selectedShape.getValue();
+
+        if (shape) {
+          const newRect = calculateResize(direction, mousePosition, shape);
+
+          const newShape = { ...shape, ...newRect };
+
+          this.updateShape.next(newShape);
+        }
       });
   }
 }

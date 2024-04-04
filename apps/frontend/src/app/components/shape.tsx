@@ -29,7 +29,14 @@ export function Shape(props: Props & Events) {
 
   return (
     data && (
-      <rect x={data.x} y={data.y} height="100" width="100" fill="#646cff" onPointerDown={onClick} />
+      <rect
+        x={data.x}
+        y={data.y}
+        height={data.height}
+        width={data.width}
+        fill="#646cff"
+        onPointerDown={onClick}
+      />
     )
   );
 }

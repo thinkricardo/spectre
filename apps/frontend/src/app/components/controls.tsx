@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import { getDirections } from '../enums/direction.enum';
+import Direction, { getDirections } from '../enums/direction.enum';
 import canvasService from '../services/canvas.service';
 
 import ResizeHandler from './resize-handler';
@@ -20,12 +20,20 @@ function Controls() {
     };
   });
 
+  const handleResize = useCallback((direction: Direction) => {
+    canvasService.handleShapeResize(direction);
+  }, []);
+
   return (
     isShapeSelected && (
       <svg className={styles.controls}>
         <g>
           {getDirections().map((direction) => (
-            <ResizeHandler key={direction} direction={direction}></ResizeHandler>
+            <ResizeHandler
+              key={direction}
+              direction={direction}
+              onResize={(direction) => handleResize(direction)}
+            ></ResizeHandler>
           ))}
         </g>
       </svg>
