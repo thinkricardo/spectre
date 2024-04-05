@@ -1,31 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 
 import Direction, { getDirections } from '../enums/direction.enum';
-import canvasService from '../services/canvas.service';
+import ShapeModel from '../models/shape.model';
+import { canvasService } from '../services/canvas.service';
+import { useQuarkValue } from '../state';
 
 import ResizeHandler from './resize-handler';
 
 import styles from './controls.module.scss';
 
 function Controls() {
-  const [isShapeSelected, setIsShapeSelected] = useState(false);
-
-  useEffect(() => {
-    const subscription = canvasService.selectedShape.subscribe(() => {
-      setIsShapeSelected(true);
-    });
-
-    return () => {
-      if (subscription) subscription.unsubscribe();
-    };
-  });
+  const selectedShape = useQuarkValue<ShapeModel | undefined>('selectedShape');
 
   const handleResize = useCallback((direction: Direction) => {
     canvasService.handleShapeResize(direction);
   }, []);
 
   return (
-    isShapeSelected && (
+    selectedShape && (
       <svg className={styles.controls}>
         <g>
           {getDirections().map((direction) => (

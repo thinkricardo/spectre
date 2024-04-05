@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { merge } from 'rxjs';
-
 import Direction from '../enums/direction.enum';
 import PositionModel from '../models/position.model';
-import canvasService from '../services/canvas.service';
+import ShapeModel from '../models/shape.model';
+import { useQuarkValue } from '../state';
 
 import styles from './resize-handler.module.scss';
 
@@ -19,61 +18,52 @@ type Events = {
 };
 
 export function ResizeHandler(props: Props & Events) {
-  const { direction } = props;
-  const { onResize } = props;
+  const { direction, onResize } = props;
 
   const [cursor, setCursor] = useState('nesw');
   const [position, setPosition] = useState<PositionModel | undefined>();
 
+  const selectedShape = useQuarkValue<ShapeModel | undefined>('selectedShape');
+
   useEffect(() => {
-    const subscription = merge(canvasService.selectedShape, canvasService.updateShape).subscribe(
-      (shape) => {
-        if (!shape) {
-          return;
-        }
+    if (selectedShape) {
+      let newCursor = 'nesw';
 
-        let newCursor = 'nesw';
+      let x = 0;
+      let y = 0;
 
-        let x = 0;
-        let y = 0;
+      if (direction === Direction.NE) {
+        newCursor = 'nesw';
 
-        if (direction === Direction.NE) {
-          newCursor = 'nesw';
+        x = selectedShape.x + selectedShape.width;
+        y = selectedShape.y;
+      }
 
-          x = shape.x + shape.width;
-          y = shape.y;
-        }
+      if (direction === Direction.NW) {
+        newCursor = 'nwse';
 
-        if (direction === Direction.NW) {
-          newCursor = 'nwse';
+        x = selectedShape.x;
+        y = selectedShape.y;
+      }
 
-          x = shape.x;
-          y = shape.y;
-        }
+      if (direction === Direction.SE) {
+        newCursor = 'nwse';
 
-        if (direction === Direction.SE) {
-          newCursor = 'nwse';
+        x = selectedShape.x + selectedShape.width;
+        y = selectedShape.y + selectedShape.height;
+      }
 
-          x = shape.x + shape.width;
-          y = shape.y + shape.height;
-        }
+      if (direction === Direction.SW) {
+        newCursor = 'nesw';
 
-        if (direction === Direction.SW) {
-          newCursor = 'nesw';
+        x = selectedShape.x;
+        y = selectedShape.y + selectedShape.height;
+      }
 
-          x = shape.x;
-          y = shape.y + shape.height;
-        }
-
-        setCursor(newCursor);
-        setPosition({ x: x, y: y });
-      },
-    );
-
-    return () => {
-      if (subscription) subscription.unsubscribe();
-    };
-  }, [setPosition, setCursor, direction]);
+      setCursor(newCursor);
+      setPosition({ x: x, y: y });
+    }
+  }, [setCursor, setPosition, direction, selectedShape]);
 
   return (
     position && (

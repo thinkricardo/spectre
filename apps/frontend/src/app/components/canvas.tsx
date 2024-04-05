@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 
 import PositionModel from '../models/position.model';
-import ShapeModel from '../models/shape.model';
-import canvasService from '../services/canvas.service';
+import { canvasService } from '../services/canvas.service';
+import { useQuarkValue } from '../state';
 
 import Controls from './controls';
 import Shape from './shape';
@@ -10,19 +10,7 @@ import Shape from './shape';
 import styles from './canvas.module.scss';
 
 export function Canvas() {
-  const [shapes, setShapes] = useState<ShapeModel[]>([]);
-
-  useEffect(() => {
-    const subscription = canvasService.getShapes().subscribe((shapes) => {
-      if (shapes) {
-        setShapes(shapes);
-      }
-    });
-
-    return () => {
-      if (subscription) subscription.unsubscribe();
-    };
-  });
+  const shapeIds = useQuarkValue<string[]>('shapeIds');
 
   const handleShapeClick = useCallback((shapeId: string, evt: React.PointerEvent) => {
     const { clientX: mouseX, clientY: mouseY } = evt;
@@ -53,8 +41,8 @@ export function Canvas() {
   return (
     <>
       <svg className={styles.canvas}>
-        {shapes.map((shape) => (
-          <Shape key={shape.id} id={shape.id} onClick={(evt) => handleShapeClick(shape.id, evt)} />
+        {shapeIds.map((shapeId) => (
+          <Shape key={shapeId} id={shapeId} onClick={(evt) => handleShapeClick(shapeId, evt)} />
         ))}
       </svg>
 
