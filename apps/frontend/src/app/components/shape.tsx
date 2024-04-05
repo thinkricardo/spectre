@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
-
-import ShapeModel from '../models/shape.model';
-import { canvasService } from '../services/canvas.service';
+import { ShapeModel } from '../models';
+import { useQuarkValue } from '../state';
 
 type Props = {
   id: string;
@@ -13,23 +11,19 @@ type Events = {
 
 export function Shape(props: Props & Events) {
   const { id, onClick } = props;
-  const [data, setData] = useState<ShapeModel | undefined>(undefined);
 
-  useEffect(() => {
-    const subscription = canvasService.getShape(id).subscribe((updatedData) => {
-      if (updatedData) {
-        setData(updatedData);
-      }
-    });
-
-    return () => {
-      if (subscription) subscription.unsubscribe();
-    };
-  });
+  const shape = useQuarkValue<ShapeModel>(id);
 
   return (
-    data && (
-      <rect x={data.x} y={data.y} height="100" width="100" fill="#646cff" onPointerDown={onClick} />
+    shape && (
+      <rect
+        x={shape.x}
+        y={shape.y}
+        height={shape.height}
+        width={shape.width}
+        fill="#646cff"
+        onPointerDown={onClick}
+      />
     )
   );
 }

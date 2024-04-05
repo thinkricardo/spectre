@@ -1,44 +1,55 @@
-import { BehaviorSubject, filter, fromEvent, Subject, takeUntil } from 'rxjs';
+import { fromEvent, takeUntil } from 'rxjs';
 
-import PositionModel from '../models/position.model';
-import ShapeModel from '../models/shape.model';
-
-const initialShapes = [
-  { id: 'abc', x: 50, y: 50 },
-  { id: 'xyz', x: 250, y: 350 },
-];
+import { Direction } from '../enums';
+import { PositionModel, ShapeModel } from '../models';
+import { store } from '../store';
+import { calculateResize } from '../utils/calculations';
 
 class CanvasService {
-  private shapes: Subject<ShapeModel[]> = new BehaviorSubject(initialShapes);
-  private updates: Subject<ShapeModel | undefined> = new BehaviorSubject<ShapeModel | undefined>(
-    undefined,
-  );
+  selectShape(shape: ShapeModel) {
+    store.setSelectedShape(shape);
+  }
 
-  handle(shapeId: string, start: PositionModel) {
+  handleShapeDrag(start: PositionModel) {
     const mouseUpEvent = fromEvent(document, 'mouseup');
 
     fromEvent(document, 'mousemove')
       .pipe(takeUntil(mouseUpEvent))
       .subscribe((evt) => {
         const mouseEvent = evt as MouseEvent;
+        const mousePosition: PositionModel = { x: mouseEvent.clientX, y: mouseEvent.clientY };
 
         const newPosition: PositionModel = {
-          x: mouseEvent.clientX - start.x,
-          y: mouseEvent.clientY - start.y,
+          x: mousePosition.x - start.x,
+          y: mousePosition.y - start.y,
         };
 
-        this.updates.next({ id: shapeId, ...newPosition });
+        const shape = store.getSelectedShape();
+
+        if (shape) {
+          store.updateShape({ ...shape, ...newPosition });
+        }
       });
   }
 
-  getShapes() {
-    initialShapes.map((s) => this.updates.next(s));
+  handleShapeResize(direction: Direction) {
+    const mouseUpEvent = fromEvent(document, 'mouseup');
 
-    return this.shapes;
-  }
+    fromEvent(document, 'mousemove')
+      .pipe(takeUntil(mouseUpEvent))
+      .subscribe((evt) => {
+        const mouseEvent = evt as MouseEvent;
+        const mousePosition: PositionModel = { x: mouseEvent.clientX, y: mouseEvent.clientY };
 
-  getShape(shapeId: string) {
-    return this.updates.pipe(filter((s) => s?.id === shapeId));
+        const shape = store.getSelectedShape();
+
+        if (shape) {
+          const newRect = calculateResize(direction, mousePosition, shape);
+          const newShape = { ...shape, ...newRect };
+
+          store.updateShape(newShape);
+        }
+      });
   }
 }
 
