@@ -1,7 +1,5 @@
-import Direction from '../enums/direction.enum';
-import PositionModel from '../models/position.model';
-import RectModel from '../models/rect.model';
-import ShapeModel from '../models/shape.model';
+import { Direction } from '../enums';
+import { PositionModel, RectModel, ShapeModel } from '../models';
 
 export const calculateResize = (
   direction: Direction,

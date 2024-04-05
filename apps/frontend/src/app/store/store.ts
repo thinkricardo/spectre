@@ -1,4 +1,4 @@
-import ShapeModel from '../models/shape.model';
+import { ShapeModel } from '../models';
 import { quark } from '../state';
 import { quarkState } from '../state/quark.state';
 

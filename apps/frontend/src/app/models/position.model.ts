@@ -1,4 +1,4 @@
-export default interface PositionModel {
+export interface PositionModel {
   x: number;
   y: number;
 }

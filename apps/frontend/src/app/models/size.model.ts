@@ -1,4 +1,4 @@
-export default interface SizeModel {
+export interface SizeModel {
   height: number;
   width: number;
 }

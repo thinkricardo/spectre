@@ -1,8 +1,7 @@
 import { fromEvent, takeUntil } from 'rxjs';
 
-import Direction from '../enums/direction.enum';
-import PositionModel from '../models/position.model';
-import ShapeModel from '../models/shape.model';
+import { Direction } from '../enums';
+import { PositionModel, ShapeModel } from '../models';
 import { store } from '../store';
 import { calculateResize } from '../utils/calculations';
 

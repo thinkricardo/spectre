@@ -1,5 +1,5 @@
-import RectModel from './rect.model';
+import { RectModel } from './rect.model';
 
-export default interface ShapeModel extends RectModel {
+export interface ShapeModel extends RectModel {
   id: string;
 }

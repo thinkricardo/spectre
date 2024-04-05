@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 
-import Direction, { getDirections } from '../enums/direction.enum';
-import ShapeModel from '../models/shape.model';
-import { canvasService } from '../services/canvas.service';
+import { Direction, getDirections } from '../enums';
+import { ShapeModel } from '../models';
+import { canvasService } from '../services';
 import { useQuarkValue } from '../state';
 
 import ResizeHandler from './resize-handler';

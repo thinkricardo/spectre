@@ -1,4 +1,4 @@
-import ShapeModel from '../models/shape.model';
+import { ShapeModel } from '../models';
 import { generateId } from '../utils/generators';
 
 export const initialShapes: ShapeModel[] = [

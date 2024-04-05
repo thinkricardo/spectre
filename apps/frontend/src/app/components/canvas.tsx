@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
-import PositionModel from '../models/position.model';
-import { canvasService } from '../services/canvas.service';
+import { PositionModel } from '../models';
+import { canvasService } from '../services';
 import { useQuarkValue } from '../state';
 
 import Controls from './controls';
